@@ -1,5 +1,5 @@
-from typing import Any
-from fastapi import FastAPI, UploadFile
+from typing import Annotated, Any
+from fastapi import FastAPI, File, Form, UploadFile
 from fastapi.staticfiles import StaticFiles
 import os
 import json
@@ -14,7 +14,7 @@ os.makedirs(UPLOAD_DIR, exist_ok=True)
 DATA_FILE = "data.json"
 if not os.path.exists(DATA_FILE):
     with open(DATA_FILE, "w") as f:
-        json.dump({"products": []}, f)
+        json.dump({"products": []}, f, indent=2)
 
 
 def load_data() -> dict[str, Any]:
@@ -24,7 +24,7 @@ def load_data() -> dict[str, Any]:
 
 def save_data(data: dict[str, Any]):
     with open(DATA_FILE, "w") as f:
-        json.dump(data, f, indent=4)
+        json.dump(data, f, indent=2)
 
 
 # GET Endpoint: List all products
@@ -37,10 +37,10 @@ def get_products() -> Any:  # pyright: ignore[reportAny]
 # POST Endpoint: Upload a new product
 @app.post("/api/products")
 async def create_product(
-    product_name: str,
-    product_desc: str,
-    files: list[UploadFile],
-):
+    product_name: Annotated[str, Form()],
+    product_desc: Annotated[str, Form()],
+    files: Annotated[list[UploadFile], File()],
+) -> None:
     data = load_data()
 
     image_urls: list[str] = []

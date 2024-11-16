@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build && cp -R out/ ../backend",
+    "build": "next build && node copy.mjs",
     "start": "next start",
     "lint": "next lint",
     "format": "biome format --write . && biome lint --write --unsafe ."
