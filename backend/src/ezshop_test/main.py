@@ -43,17 +43,17 @@ async def create_product(
 ) -> None:
     data = load_data()
 
-    image_urls: list[str] = []
+    urls: list[str] = []
     for file in files:
         file_path = os.path.join(UPLOAD_DIR, file.filename or "image")
         with open(file_path, "wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
-        image_urls.append(f"/{UPLOAD_DIR}/{file.filename}")
+        urls.append(f"/{UPLOAD_DIR}/{file.filename}")
 
     product: dict[str, str | list[str]] = {
         "name": product_name,
         "description": product_desc,
-        "image_urls": image_urls,
+        "urls": urls,
     }
 
     data["products"].append(product)  # pyright: ignore[reportAny]

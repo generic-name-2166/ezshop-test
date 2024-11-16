@@ -22,5 +22,5 @@ cd ..
 cd frontend
 npm run build
 cd ../backend
-fastapi run src/ezshop_test/main.py
+fastapi dev src/ezshop_test/main.py
 ```

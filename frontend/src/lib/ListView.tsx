@@ -1,6 +1,6 @@
 "use client";
 
-import type { JSX } from "react";
+import type { JSX, MouseEventHandler } from "react";
 import {
   fetchProducts,
   type Product,
@@ -12,13 +12,24 @@ function ProductView({ name, urls }: Product): JSX.Element {
   return (
     <div>
       <h2>{name}</h2>
-      <div>
+      <div className="flex flex-row">
         {urls.map((url) => (
-          <img key={url} src={url} alt={name} />
+          <img key={url} src={url} alt={name} height={96} width={96} />
         ))}
       </div>
     </div>
   );
+}
+
+function handleRefersh(
+  dispatch: ReturnType<typeof useProductDispatch>,
+): MouseEventHandler<HTMLButtonElement> {
+  return async () => {
+    const products: Product[] = await fetch("/api/products").then((resp) =>
+      resp.json(),
+    );
+    dispatch(fetchProducts(products));
+  };
 }
 
 export default function ListView(): JSX.Element {
@@ -28,7 +39,7 @@ export default function ListView(): JSX.Element {
   );
   const dispatch = useProductDispatch();
 
-  const click = () => dispatch(fetchProducts());
+  const click = handleRefersh(dispatch);
 
   return (
     <div>

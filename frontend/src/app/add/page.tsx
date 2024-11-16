@@ -36,7 +36,7 @@ function handleSubmit(
         URL.revokeObjectURL(image.url);
       }
       clearImages();
-      form.clear();
+      form.reset();
     });
   };
 }

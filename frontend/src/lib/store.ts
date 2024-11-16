@@ -1,8 +1,7 @@
 import {
   configureStore,
   createSlice,
-  PayloadAction,
-  type UnknownAction,
+  type PayloadAction,
 } from "@reduxjs/toolkit";
 import { useDispatch, useSelector } from "react-redux";
 import files from "./files.ts";
@@ -24,8 +23,11 @@ const productSlice = createSlice({
   name: "products",
   initialState,
   reducers: {
-    fetchProducts(state: ProductState): ProductState {
-      return state;
+    fetchProducts(
+      _state: ProductState,
+      action: PayloadAction<Product[]>,
+    ): ProductState {
+      return { products: action.payload };
     },
   },
 });
