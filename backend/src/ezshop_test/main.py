@@ -16,10 +16,6 @@ if not os.path.exists(DATA_FILE):
     with open(DATA_FILE, "w") as f:
         json.dump({"products": []}, f)
 
-FRONT_DIR = "out"
-app.mount("/", StaticFiles(directory=FRONT_DIR, html=True), name="frontend")
-app.mount("/uploads", StaticFiles(directory=UPLOAD_DIR), name="uploads")
-
 
 def load_data() -> dict[str, Any]:
     with open(DATA_FILE, "r") as f:
@@ -62,3 +58,9 @@ async def create_product(
 
     data["products"].append(product)  # pyright: ignore[reportAny]
     save_data(data)
+
+
+app.mount("/uploads", StaticFiles(directory=UPLOAD_DIR), name="uploads")
+# After everything so that it takes the lowest precedence
+FRONT_DIR = "out"
+app.mount("/", StaticFiles(directory=FRONT_DIR, html=True), name="frontend")
