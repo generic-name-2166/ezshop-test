@@ -1,41 +1,42 @@
-import { configureStore, type UnknownAction } from "@reduxjs/toolkit";
+import {
+  configureStore,
+  createSlice,
+  PayloadAction,
+  type UnknownAction,
+} from "@reduxjs/toolkit";
 import { useDispatch, useSelector } from "react-redux";
+import files from "./files.ts";
 
 export interface Product {
   name: string;
   urls: string[];
 }
 
-export interface FetchAction extends UnknownAction {
-  type: "product/fetch";
-}
-export const FETCH_ACTION: FetchAction = { type: "product/fetch" };
-
-type ProductAction = FetchAction;
-
 export interface ProductState {
   products: Product[];
 }
 
-const preloadedState: ProductState = {
+const initialState: ProductState = {
   products: [],
 };
 
-function reducer(
-  store: ProductState | undefined,
-  action: ProductAction,
-): ProductState {
-  const state = store ?? preloadedState;
-  switch (action.type) {
-    case "product/fetch":
-      // TODO
+const productSlice = createSlice({
+  name: "products",
+  initialState,
+  reducers: {
+    fetchProducts(state: ProductState): ProductState {
       return state;
-  }
-}
+    },
+  },
+});
+
+export const { fetchProducts } = productSlice.actions;
 
 export const products = configureStore({
-  reducer,
-  preloadedState,
+  reducer: {
+    products: productSlice.reducer,
+    files,
+  },
 });
 
 export const useProductDispatch =

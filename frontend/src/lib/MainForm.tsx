@@ -13,7 +13,7 @@ export default function MainForm(): JSX.Element {
         <input
           id={nameId}
           className="peer rounded-lg border-2 border-gray-300 p-2 focus:outline-blue-500 active:outline-blue-500"
-          name="product-name"
+          name="product_name"
         />
         <label
           htmlFor={nameId}
@@ -26,7 +26,7 @@ export default function MainForm(): JSX.Element {
         <textarea
           id={descId}
           className="peer rounded-lg border-2 border-gray-300 p-2 focus:outline-blue-500 active:outline-blue-500"
-          name="product-desc"
+          name="product_desc"
         />
         <label
           htmlFor={descId}

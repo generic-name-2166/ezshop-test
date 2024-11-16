@@ -2,7 +2,7 @@
 
 import type { JSX } from "react";
 import {
-  FETCH_ACTION,
+  fetchProducts,
   type Product,
   useProductDispatch,
   useProductSelector,
@@ -24,11 +24,11 @@ function ProductView({ name, urls }: Product): JSX.Element {
 export default function ListView(): JSX.Element {
   const products: Product[] = useProductSelector(
     //@ts-expect-error God knows why state is typed as a function but isn't one in reality
-    (state) => state?.products ?? [],
+    (state) => state?.products.products ?? [],
   );
   const dispatch = useProductDispatch();
 
-  const click = () => dispatch(FETCH_ACTION);
+  const click = () => dispatch(fetchProducts());
 
   return (
     <div>

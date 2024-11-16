@@ -11,15 +11,19 @@ import {
 } from "react";
 import ImageItem from "./ImageItem.tsx";
 import Clip from "./Clip.tsx";
+import { useProductDispatch, useProductSelector } from "./store.ts";
+import { replace, type SerializedFile, serializeFile } from "./files.ts";
 
 function handleFileChange(
-  setImages: (set: (prev: File[]) => File[]) => void,
+  setImages: (set: (prev: SerializedFile[]) => SerializedFile[]) => void,
   available: number[],
   setAvailable: (set: (prev: number[]) => number[]) => void,
   setKeys: (set: (prev: number[]) => number[]) => void,
 ): ChangeEventHandler<HTMLInputElement> {
   return (event: ChangeEvent<HTMLInputElement>): void => {
-    const newImages = Array.from(event.currentTarget.files ?? []);
+    const newImages = Array.from(event.currentTarget.files ?? []).map(
+      serializeFile,
+    );
     setImages((prevImages) => prevImages.concat(newImages));
     setKeys((prev) => prev.concat(available.slice(0, newImages.length)));
     setAvailable((prev) => prev.slice(newImages.length));
@@ -27,13 +31,21 @@ function handleFileChange(
 }
 
 function removeImage(
-  setImages: (set: (prev: File[]) => File[]) => void,
+  setImages: (set: (prev: SerializedFile[]) => SerializedFile[]) => void,
   setAvailable: (set: (prev: number[]) => number[]) => void,
   setKeys: (set: (prev: number[]) => number[]) => void,
 ): (key: number, idx: number) => () => void {
   return (key: number, idx: number): (() => void) =>
     (): void => {
-      setImages((prev) => prev.filter((_, i) => i !== idx));
+      setImages((prev) =>
+        prev.filter((image, i) => {
+          if (i === idx) {
+            URL.revokeObjectURL(image.url);
+            return false;
+          }
+          return true;
+        }),
+      );
       setAvailable((prev) => [...prev, key]);
       setKeys((prev) => prev.filter((value) => value !== key));
     };
@@ -49,7 +61,7 @@ function swapItems<T>(from: number, to: number): (array: T[]) => T[] {
 }
 
 function moveUp(
-  setImages: (set: (prev: File[]) => File[]) => void,
+  setImages: (set: (prev: SerializedFile[]) => SerializedFile[]) => void,
   setKeys: (set: (prev: number[]) => number[]) => void,
 ): (idx: number) => (() => void) | undefined {
   return (idx: number): (() => void) | undefined =>
@@ -57,13 +69,13 @@ function moveUp(
       ? undefined
       : (): void => {
           const swap = swapItems(idx, idx - 1);
-          setImages(swap as (array: File[]) => File[]);
+          setImages(swap as (array: SerializedFile[]) => SerializedFile[]);
           setKeys(swap as (array: number[]) => number[]);
         };
 }
 
 function moveDown(
-  setImages: (set: (prev: File[]) => File[]) => void,
+  setImages: (set: (prev: SerializedFile[]) => SerializedFile[]) => void,
   length: number,
   setKeys: (set: (prev: number[]) => number[]) => void,
 ): (idx: number) => (() => void) | undefined {
@@ -72,7 +84,7 @@ function moveDown(
       ? undefined
       : (): void => {
           const swap = swapItems(idx, idx + 1);
-          setImages(swap as (array: File[]) => File[]);
+          setImages(swap as (array: SerializedFile[]) => SerializedFile[]);
           setKeys(swap as (array: number[]) => number[]);
         };
 }
@@ -81,7 +93,14 @@ export default function ImageForm(): JSX.Element {
   const uploadId = useId();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const [images, setImages] = useState<File[]>([]);
+  const dispatch = useProductDispatch();
+  const images: SerializedFile[] = useProductSelector(
+    //@ts-expect-error God knows why state is typed as a function but isn't one in reality
+    (state) => state?.files.files ?? [],
+  );
+  const setImages = (set: (files: SerializedFile[]) => SerializedFile[]) =>
+    dispatch(replace(set(images)));
+  // const [images, setImages] = useState<File[]>([]);
 
   const [available, setAvailable] = useState<number[]>([...Array(32).keys()]);
   const [keys, setKeys] = useState<number[]>([]);

@@ -4,9 +4,10 @@ import type { JSX } from "react";
 import Cross from "./Cross.tsx";
 import CarretUp from "./CarretUp.tsx";
 import CarretDown from "./CarretDown.tsx";
+import type { SerializedFile } from "./files.ts";
 
 export interface ImageItemProps {
-  image: File;
+  image: SerializedFile;
   remove(): void;
   up?: () => void;
   down?: () => void;
@@ -18,7 +19,7 @@ export default function ImageItem({
   up,
   down,
 }: ImageItemProps): JSX.Element {
-  const url = URL.createObjectURL(image);
+  const url = image.url;
 
   return (
     <div className="flex flex-row justify-between">
