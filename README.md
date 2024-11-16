@@ -1,3 +1,7 @@
+# Ezshop test
+
+![Preview image](https://github.com/generic-name-2166/ezshop-test/blob/main/backend/uploads/preview.png)
+
 # How to
 
 ## Install
