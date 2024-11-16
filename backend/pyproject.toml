@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools >= 75.5"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ezshop_test"
+version = "0.1.0"
+dependencies = [
+    "fastapi[standard] >= 0.115",
+    "python-multipart >= 0.0",
+]
+requires-python = ">=3.12"
+
+[project.optional-dependencies]
+dev = [
+    "ruff >= 0.7",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+target-version = "py312"

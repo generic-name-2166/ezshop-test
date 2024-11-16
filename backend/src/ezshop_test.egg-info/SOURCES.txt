@@ -1,0 +1,7 @@
+pyproject.toml
+src/ezshop_test/main.py
+src/ezshop_test.egg-info/PKG-INFO
+src/ezshop_test.egg-info/SOURCES.txt
+src/ezshop_test.egg-info/dependency_links.txt
+src/ezshop_test.egg-info/requires.txt
+src/ezshop_test.egg-info/top_level.txt

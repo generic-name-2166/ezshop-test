@@ -23,6 +23,7 @@ function ProductView({ name, urls }: Product): JSX.Element {
 
 export default function ListView(): JSX.Element {
   const products: Product[] = useProductSelector(
+    //@ts-expect-error God knows why state is typed as a function but isn't one in reality
     (state) => state?.products ?? [],
   );
   const dispatch = useProductDispatch();
