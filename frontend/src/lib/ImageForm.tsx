@@ -80,7 +80,9 @@ function moveDown(
 export default function ImageForm(): JSX.Element {
   const uploadId = useId();
   const fileInputRef = useRef<HTMLInputElement>(null);
+
   const [images, setImages] = useState<File[]>([]);
+
   const [available, setAvailable] = useState<number[]>([...Array(32).keys()]);
   const [keys, setKeys] = useState<number[]>([]);
 

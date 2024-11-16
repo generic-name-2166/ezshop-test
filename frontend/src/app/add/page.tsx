@@ -10,7 +10,7 @@ export default function AddPage(): JSX.Element {
   return (
     <form className="flex h-screen flex-col space-y-5 bg-gray-300">
       <h1 className="flex flex-row justify-between px-4 pt-4 font-bold text-lg">
-        <span>Adding a product</span>{" "}
+        <span>Adding a product</span>
         <Link href="/">
           <Cross />
         </Link>
