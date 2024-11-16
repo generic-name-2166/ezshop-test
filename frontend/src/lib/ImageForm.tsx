@@ -7,6 +7,7 @@ import {
   useRef,
   useState,
   type JSX,
+  Fragment,
 } from "react";
 import ImageItem from "./ImageItem.tsx";
 import Clip from "./Clip.tsx";
@@ -38,6 +39,44 @@ function removeImage(
     };
 }
 
+function swapItems<T>(from: number, to: number): (array: T[]) => T[] {
+  return (array: T[]): T[] => {
+    const copy = [...array];
+    copy[to] = array[from];
+    copy[from] = array[to];
+    return copy;
+  };
+}
+
+function moveUp(
+  setImages: (set: (prev: File[]) => File[]) => void,
+  setKeys: (set: (prev: number[]) => number[]) => void,
+): (idx: number) => (() => void) | undefined {
+  return (idx: number): (() => void) | undefined =>
+    idx <= 0
+      ? undefined
+      : (): void => {
+          const swap = swapItems(idx, idx - 1);
+          setImages(swap as (array: File[]) => File[]);
+          setKeys(swap as (array: number[]) => number[]);
+        };
+}
+
+function moveDown(
+  setImages: (set: (prev: File[]) => File[]) => void,
+  length: number,
+  setKeys: (set: (prev: number[]) => number[]) => void,
+): (idx: number) => (() => void) | undefined {
+  return (idx: number): (() => void) | undefined =>
+    idx >= length - 1
+      ? undefined
+      : (): void => {
+          const swap = swapItems(idx, idx + 1);
+          setImages(swap as (array: File[]) => File[]);
+          setKeys(swap as (array: number[]) => number[]);
+        };
+}
+
 export default function ImageForm(): JSX.Element {
   const uploadId = useId();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -47,6 +86,9 @@ export default function ImageForm(): JSX.Element {
 
   const change = handleFileChange(setImages, available, setAvailable, setKeys);
   const remove = removeImage(setImages, setAvailable, setKeys);
+
+  const up = moveUp(setImages, setKeys);
+  const down = moveDown(setImages, keys.length, setKeys);
 
   return (
     <fieldset className="flex flex-col rounded-lg border bg-white p-4">
@@ -67,7 +109,15 @@ export default function ImageForm(): JSX.Element {
       />
       <div>
         {images.map((image, i) => (
-          <ImageItem key={keys[i]} image={image} remove={remove(keys[i], i)} />
+          <Fragment key={keys[i]}>
+            {i !== 0 && <hr className="my-2" />}
+            <ImageItem
+              image={image}
+              remove={remove(keys[i], i)}
+              up={up(i)}
+              down={down(i)}
+            />
+          </Fragment>
         ))}
       </div>
     </fieldset>
