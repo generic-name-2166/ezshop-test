@@ -51,7 +51,7 @@ export default function ImageItem({
         <p>{image.name}</p>
         <small className="text-gray-400">image</small>
       </div>
-      <button type="button" onClick={remove} className="px-2">
+      <button type="button" onClick={remove} className="px-2 text-gray-400">
         <Cross />
       </button>
     </div>
