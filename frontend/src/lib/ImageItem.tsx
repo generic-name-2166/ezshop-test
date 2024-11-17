@@ -1,10 +1,13 @@
 "use client";
 
-import type { JSX } from "react";
+import { useRef, useState, type JSX } from "react";
 import Cross from "./Cross.tsx";
 import CarretUp from "./CarretUp.tsx";
 import CarretDown from "./CarretDown.tsx";
 import type { SerializedFile } from "./files.ts";
+import ReactCrop, { type Crop } from "react-image-crop";
+import "react-image-crop/dist/ReactCrop.css";
+import PreviewImage from "./PreviewImage.tsx";
 
 export interface ImageItemProps {
   image: SerializedFile;
@@ -41,13 +44,9 @@ export default function ImageItem({
           <CarretDown />
         </button>
       </div>
-      <img
-        src={url}
-        alt="uploaded file"
-        height={48}
-        width={48}
-        className="rounded"
-      />
+
+      <PreviewImage url={url} />
+
       <div className="flex grow flex-col px-4 text-left">
         <p>{image.name}</p>
         <small className="text-gray-400">image</small>
